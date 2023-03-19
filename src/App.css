@@ -78,6 +78,11 @@
   height: 170px;
 }
 
+.game .div-btn {
+  width: 175px;
+  height: 50px;
+}
+
 .wrapper .results {
   height: 100%;
   display: flex;
