@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {allCards, results} from "../utils/constants";
+import Card from "../utils/Card";
 
 class GamePage extends Component {
     constructor(props) {
@@ -40,55 +41,6 @@ class GamePage extends Component {
         });
     }
 
-    checkCardValue = card => {
-        let value;
-        switch (card[0][0]) {
-            case '2':
-                value = 2;
-                break;
-            case '3':
-                value = 3;
-                break;
-            case '4':
-                value = 4;
-                break;
-            case '5':
-                value = 5;
-                break;
-            case '6':
-                value = 6;
-                break;
-            case '7':
-                value = 7;
-                break;
-            case '8':
-                value = 8;
-                break;
-            case '9':
-                value = 9;
-                break;
-            case '0':
-                value = 10;
-                break;
-            case 'J':
-                value = 11;
-                break;
-            case 'Q':
-                value = 12;
-                break;
-            case 'K':
-                value = 13;
-                break;
-            case 'A':
-                value = 14;
-                break;
-            default:
-                value = 'unknown value';
-        }
-
-        return value;
-    }
-
     nextStep = () => {
         if (this.state.button === results) {
             let winner;
@@ -108,8 +60,8 @@ class GamePage extends Component {
         } else {
             const currentComputerCardCode = this.state.decks.computer.splice(0, 1);
             const currentUserCardCode = this.state.decks.user.splice(0, 1);
-            const currentComputerCard = this.checkCardValue(currentComputerCardCode);
-            const currentUserCard = this.checkCardValue(currentUserCardCode);
+            const currentComputerCard = Card.checkValue(currentComputerCardCode);
+            const currentUserCard = Card.checkValue(currentUserCardCode);
 
             let currentScoreComputer = this.state.score.computer;
             let currentScoreUser = this.state.score.user;
