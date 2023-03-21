@@ -74,6 +74,7 @@ class GamePage extends Component {
         }
     }
 
+
     render() {
         return (
             <div className="game">
