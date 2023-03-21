@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
 import {allCards, results} from "../utils/constants";
-import Card from "../utils/Card";
+import Cards from "../utils/Cards";
 
 class GamePage extends Component {
     constructor(props) {
         super(props);
-        this.deck = [...allCards];
+        this.deck = Cards.shuffleDeck([...allCards]);
         this.state = {
             button: 'Next',
             score: {
@@ -13,32 +13,14 @@ class GamePage extends Component {
                 user: 0,
             },
             decks: {
-                computer: [],
-                user: [],
+                computer: this.deck.splice(0, 26),
+                user: this.deck,
             },
             currentCard: {
                 computer: 'back',
                 user: 'back',
             }
         }
-    }
-
-    shuffleDeck = () => {
-        for (let i = this.deck.length - 1; i > 0; i--) {
-            let j = Math.floor(Math.random() * (i + 1));
-            [this.deck[i], this.deck[j]] = [this.deck[j], this.deck[i]];
-        }
-    }
-
-    divideDeck = () => {
-        const computerDeck = this.deck.splice(0, 26);
-        const userDeck = this.deck;
-        this.setState({
-            ...this.state, decks: {
-                computer: computerDeck,
-                user: userDeck
-            }
-        });
     }
 
     nextStep = () => {
@@ -60,8 +42,8 @@ class GamePage extends Component {
         } else {
             const currentComputerCardCode = this.state.decks.computer.splice(0, 1);
             const currentUserCardCode = this.state.decks.user.splice(0, 1);
-            const currentComputerCard = Card.checkValue(currentComputerCardCode);
-            const currentUserCard = Card.checkValue(currentUserCardCode);
+            const currentComputerCard = Cards.checkValue(currentComputerCardCode);
+            const currentUserCard = Cards.checkValue(currentUserCardCode);
 
             let currentScoreComputer = this.state.score.computer;
             let currentScoreUser = this.state.score.user;
@@ -105,11 +87,6 @@ class GamePage extends Component {
                 </button>
             </div>
         );
-    }
-
-    componentDidMount() {
-        this.shuffleDeck();
-        this.divideDeck();
     }
 }
 
