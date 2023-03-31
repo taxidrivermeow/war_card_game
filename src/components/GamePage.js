@@ -1,34 +1,29 @@
-import React, {Component} from 'react';
+import React, {useState} from 'react';
 import {allCards, results} from "../utils/constants";
 import Cards from "../utils/Cards";
 
-class GamePage extends Component {
-    constructor(props) {
-        super(props);
-        this.deck = Cards.shuffleDeck([...allCards]);
-        this.state = {
-            button: 'Next',
-            score: {
-                computer: 0,
-                user: 0,
-            },
-            decks: {
-                computer: this.deck.splice(0, 26),
-                user: this.deck,
-            },
-            currentCard: {
-                computer: 'back',
-                user: 'back',
-            }
-        }
-    }
+const GamePage = (props) => {
+    const deck = Cards.shuffleDeck([...allCards]);
+    const [button, setButton] = useState('Next');
+    const [score, setScore] = useState({
+        computer: 0,
+        user: 0,
+    });
+    const [decks, setDecks] = useState({
+        computer: deck.splice(0, 26),
+        user: deck,
+    });
+    const [currentCard, setCurrentCard] = useState({
+        computer: 'back',
+        user: 'back',
+    });
 
-    nextStep = () => {
-        if (this.state.button === results) {
+    const nextStep = () => {
+        if (button === results) {
             let winner;
-            const currentScoreComputer = this.state.score.computer;
-            const currentScoreUser = this.state.score.user;
-            const score = `${currentScoreComputer} - ${currentScoreUser}`;
+            const currentScoreComputer = score.computer;
+            const currentScoreUser = score.user;
+            const lastScore = `${currentScoreComputer} - ${currentScoreUser}`;
 
             if (currentScoreUser > currentScoreComputer) {
                 winner = 'user';
@@ -38,15 +33,15 @@ class GamePage extends Component {
                 winner = 'draw'
             }
 
-            this.props.gameOver(winner, score);
+            props.gameOver(winner, lastScore);
         } else {
-            const currentComputerCardCode = this.state.decks.computer.splice(0, 1);
-            const currentUserCardCode = this.state.decks.user.splice(0, 1);
+            const currentComputerCardCode = decks.computer.splice(0, 1);
+            const currentUserCardCode = decks.user.splice(0, 1);
             const currentComputerCard = Cards.checkValue(currentComputerCardCode);
             const currentUserCard = Cards.checkValue(currentUserCardCode);
 
-            let currentScoreComputer = this.state.score.computer;
-            let currentScoreUser = this.state.score.user;
+            let currentScoreComputer = score.computer;
+            let currentScoreUser = score.user;
 
             if (currentComputerCard > currentUserCard) {
                 currentScoreComputer++;
@@ -54,41 +49,34 @@ class GamePage extends Component {
                 currentScoreUser++;
             }
 
-            let result = {
-                ...this.state,
-                currentCard: {
-                    computer: currentComputerCardCode,
-                    user: currentUserCardCode,
-                },
-                score: {
-                    computer: currentScoreComputer,
-                    user: currentScoreUser,
-                },
-            }
+            setCurrentCard({
+                computer: currentComputerCardCode,
+                user: currentUserCardCode,
+            });
 
-            if (this.state.decks.computer.length === 0 || this.state.decks.user.length === 0) {
-                result.button = results;
-            }
+            setScore({
+                computer: currentScoreComputer,
+                user: currentScoreUser,
+            });
 
-            this.setState(result);
+            if (decks.computer.length === 0 || decks.user.length === 0) {
+                setButton(results);
+            }
         }
     }
 
-
-    render() {
-        return (
-            <div className="game">
-                <h1 className="playerName">Computer: {this.state.score.computer}</h1>
-                <img className="card" src={require(`../img/${this.state.currentCard.computer}.png`)} alt={'card'}/>
-                <img className="card" src={require(`../img/${this.state.currentCard.user}.png`)} alt={'card'}/>
-                <h1 className="playerName">{this.props.userName}: {this.state.score.user}</h1>
-                <button className="next-btn"
-                        onClick={this.nextStep}
-                >{this.state.button}
-                </button>
-            </div>
-        );
-    }
-}
+    return (
+        <div className="game">
+            <h1 className="playerName">Computer: {score.computer}</h1>
+            <img className="card" src={require(`../img/${currentCard.computer}.png`)} alt={'card'}/>
+            <img className="card" src={require(`../img/${currentCard.user}.png`)} alt={'card'}/>
+            <h1 className="playerName">{props.userName}: {score.user}</h1>
+            <button className="next-btn"
+                    onClick={nextStep}
+            >{button}
+            </button>
+        </div>
+    );
+};
 
 export default GamePage;
