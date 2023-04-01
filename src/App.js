@@ -16,20 +16,15 @@ const App = () => {
     });
 
     const gameOver = (winner, lastScore) => {
-        let winnerName;
         let computerScore = fullScore.computer;
         let userScore = fullScore.user;
-        if (winner === 'user') {
-            winnerName = userName;
+        if (winner === userName) {
             userScore++;
-        } else if (winner === 'computer') {
-            winnerName = 'Computer';
+        } else if (winner === 'Computer') {
             computerScore++;
-        } else {
-            winnerName = 'Draw';
         }
 
-        setCurrentWinner(winnerName);
+        setCurrentWinner(winner);
         setCurrentPage(resultsPage);
         setLastScore(lastScore);
         setFullScore({
